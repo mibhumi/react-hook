@@ -1,23 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
 
-function App() {
+function App(props) {
+  const [checked, setChecked] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Learn React Hook</h1>
+      <input type="checkbox" value={checked} onChange={()=>setChecked(!checked)} />
+      <p>{checked ? "Checked" : "Not Checked"}</p>
     </div>
   );
 }
