@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -7,6 +7,7 @@ import {useContext} from 'react';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export const TreeContext = createContext();
+export const useTree = () => useContext(TreeContext);
 
 const trees = [
   {id: "1", type: "maple"},

@@ -2,17 +2,21 @@ import logo from './logo.svg';
 import './App.css';
 import { useEffect, useReducer, useState , useRef, useContext} from 'react';
 import { useInput } from './useInput';
-import {TreeContext} from './index';
+import {TreeContext, useTree} from './index';
+import {useFetch} from './useFetch';
 
 function App(props) {
 
-  const {trees} = useContext(TreeContext);
+  // const {trees} = useContext(TreeContext);
+
+  const {trees} = useTree();
 
   // const color = useRef();
   // const sound = useRef();
 
   const [titleProps, resetTitle] = useInput("");
   const [colorProps, resetColor] = useInput("#909090");
+  const {loading, data, error} = useFetch("https://api.github.com/users");
 
   const submit = (e) => {
     e.preventDefault();
@@ -55,6 +59,22 @@ function App(props) {
             ))
           }
         </ul>
+      </div>
+      <div>
+        <h3>Data using useFetch</h3>
+        { loading ? <p>Your data is loading...</p> : null }
+        { error ? <p>Sorry we got an error... {JSON.stringify(error, null, 2)}</p> : null }
+        { data ?
+            Object.keys(data).map( (user) => {
+              const userData = data[user];
+              return (
+                <div>
+                  <h3>Name: {userData.login}</h3>
+                  <img src={userData.avatar_url}/>
+                </div>
+              )
+            })
+        : null }
       </div>
     </div>
   );
