@@ -1,9 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
-import { useEffect, useReducer, useState , useRef} from 'react';
+import { useEffect, useReducer, useState , useRef, useContext} from 'react';
 import { useInput } from './useInput';
+import {TreeContext} from './index';
 
 function App(props) {
+
+  const {trees} = useContext(TreeContext);
 
   // const color = useRef();
   // const sound = useRef();
@@ -42,6 +45,17 @@ function App(props) {
         />
         <button onClick={submit}>Add</button>
       </form>
+
+      <div>
+        <h3>List of Trees</h3>
+        <ul>
+          {
+            trees.map((tree)=>(
+              <li key={tree.id}>{tree.type}</li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
   );
 }
