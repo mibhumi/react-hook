@@ -1,72 +1,49 @@
 import logo from './logo.svg';
 import './App.css';
-import { useEffect, useState } from 'react';
-import { FaStar } from 'react-icons/fa';
+import { useEffect, useReducer, useState } from 'react';
 
 function App(props) {
 
-  const [checked, setChecked] = useState(false);
-  const [name, setName] = useState("");
-  const [admin, setAdmin] = useState();
-  const [data, setData] = useState([]);
+  const [number, setNumber] = useReducer((number, newNumber)=> number + newNumber, 0);
+  const [checked, toggle] = useReducer(
+    checked => !checked, false
+  );
 
-  const CreateArray = (length) => [...Array(length)];
-
-  useEffect(()=>{
-    document.title = `Celebrate ${name}`;
-    console.log(`name is: ${name}`)
-  },[name]);
-
-  useEffect(()=>{
-    console.log(`admin is: ${admin}`);
-  },[admin]);
-
-  // cause data flikering
-  useEffect(()=>{
-    fetch(`https://api.github.com/users`)
-    .then(response=>response.json())
-    .then(setData);
-  },[data]);
-
-  function Star({selected=false, onSelect}) {
-    return <FaStar color={selected ? "Red" : "Gray"} onClick={onSelect}/>
+  const initState = {
+    name: "Bhumi Patel",
+    counter: 0
   }
 
-  function StarRatiing({totalStars = 5}) {
-
-    const [selectedStar, setSelectedStar] = useState(0);
-
-    return (
-      <>
-        {CreateArray(totalStars).map((n,i)=>
-            <Star 
-              key={i} 
-              selected= {selectedStar > i} 
-              onSelect={() => setSelectedStar(i+1)}
-            />
-        )}
-        <p> {selectedStar} of {totalStars}</p>
-      </>
-      )
+  const reducer = (state, action) => {
+    // eslint-disable-next-line default-case
+    switch(action.type) {
+      case "inc":
+        return { ...state,
+          counter: state.counter + 1 
+        };
+      case "dec":
+        return { ...state,
+          counter: state.counter - 1
+        };
+    }
   }
+
+  const [state, dispatch] = useReducer( reducer , initState);
 
   return (
     <div>
       <h1>Learn React Hook</h1>
-      <input type="checkbox" value={checked} onChange={()=>setChecked(!checked)} />
-      <p>{checked ? "Checked" : "Not Checked"}</p>
-      <StarRatiing totalStars={5}/>
-      <p>Congratulations {name}!</p>
-      <button onClick={()=>setName("Bhumi")}>Change winner</button>
-      <button onClick={()=>setAdmin(true)}>Change Admin</button>
-      {
-        data && data.map(user=>(
-          <li key={user.id}>{user.login}</li>
-        ))
-      }
-      {
-        data && <button onClick={()=>setData([])}>Remove Data</button>
-      }
+      <p onClick={()=>setNumber(1)}>{number}</p>
+      <input
+        type="checkbox"
+        value={checked}
+        onChange={toggle}
+      />
+      {checked ? "I am checked" : "I am not checked"}
+      <h3>Counter craeted by {state.name}</h3>
+      <p>{state.counter}</p>
+      <button onClick={()=>dispatch({type: "inc"})}>Increment</button>
+      <button onClick={()=>dispatch({type: "dec"})}>Decrement</button>
     </div>
   );
 }
